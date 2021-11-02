@@ -41,7 +41,7 @@ def load_Q1_dataset(filename='data/dataset_q1.csv'):
     return(X, Y)
 
 def load_Q2_dataset(filename='data/dataset_q2.mat'):
-    data = loadmat(filename);
+    data = loadmat(filename)
     Xtrn_org = data['dataset']['train'][0,0]['images'][0,0].astype(dtype=np.float_)
     Xtst_org = data['dataset']['test'][0,0]['images'][0,0][:,:].astype(dtype=np.float_)
     Ytrn_org = data['dataset']['train'][0,0]['labels'][0,0].astype(dtype=np.int_).flatten()
