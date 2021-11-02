@@ -42,7 +42,7 @@ print(Xa)
 def iaml212cw2_q1_1():
     fig, axs = plt.subplots(3, 3)
     axs[0, 0].hist([Xa[:,0], Xb[:,0]], bins=15)
-    axs[0, 0].set_title('Axis [0, 0]')
+    axs[0, 0].set_title('histogram')
     axs[0, 1].hist([Xa[:,1], Xb[:,1]], bins=15)
     axs[0, 1].set_title('Axis [0, 1]')
     axs[0, 2].hist([Xa[:,2], Xb[:,2]], bins=15)
@@ -61,11 +61,10 @@ def iaml212cw2_q1_1():
     axs[2, 2].set_title('Axis [1, 1]')
     for ax in axs.flat:
         ax.set(xlabel='x-label', ylabel='y-label')
+        ax.grid()
+        as.label_outer()
 
-    # Hide x labels and tick labels for top plots and y ticks for right plots.
-    for ax in axs.flat:
-        ax.label_outer()
-
+    plt.show()
 iaml212cw2_q1_1()   # comment this out when you run the function
 #
 # # Q1.2
