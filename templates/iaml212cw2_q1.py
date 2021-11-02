@@ -15,8 +15,13 @@
 
 import numpy as np
 import scipy
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import accuracy_score, confusion_matrix, r2_score, mean_squared_error
 from iaml_cw2_helpers import *
 # from iaml212cw2_my_helpers import *
 

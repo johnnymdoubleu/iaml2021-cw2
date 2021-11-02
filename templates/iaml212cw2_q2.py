@@ -14,13 +14,14 @@
 # NB: You can edit the following and add code (e.g. code for loading sklearn) if necessary.
 
 import numpy as np
+import pandas as pd
 import scipy
 import matplotlib.pyplot as plt
 import seaborn as sns
 from iaml212cw2_helpers import *
 # from iaml212cw2_my_helpers import *
 
-#<----
+# pd.<----
 
 # Q2.1
 def iaml212cw2_q2_1():
@@ -47,23 +48,22 @@ def iaml212cw2_q2_5():
 #
 # iaml212cw2_q2_5()   # comment this out when you run the function
 
-# Q2.6 
+# Q2.6
 def iaml212cw2_q2_6():
 #
 # iaml212cw2_q2_6()   # comment this out when you run the function
 
-# Q2.7 
+# Q2.7
 def iaml212cw2_q2_7():
 #
 # iaml212cw2_q2_7()   # comment this out when you run the function
 
-# Q2.8 
+# Q2.8
 def iaml212cw2_q2_8():
 #
 # iaml212cw2_q2_8()   # comment this out when you run the function
 
-# Q2.9 
+# Q2.9
 def iaml212cw2_q2_9():
 #
 # iaml212cw2_q2_9()   # comment this out when you run the function
-
