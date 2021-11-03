@@ -35,7 +35,7 @@ def print_versions():
 
 def load_Q1_dataset(filename='data/dataset_q1.csv'):
     df = pd.read_csv(filename)
-    # print(df.columns)
+    # print(df.zcolumns)
     X = df[df.columns[0:-1]].to_numpy()
     Y = df[df.columns[-1]].to_numpy()
     return(X, Y)

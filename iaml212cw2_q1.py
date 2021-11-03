@@ -25,52 +25,38 @@ from sklearn.metrics import accuracy_score, confusion_matrix, r2_score, mean_squ
 from iaml_cw2_helpers import *
 from iaml212cw2_my_helpers import *
 
+print_versions()
 X, Y = load_Q1_dataset()
 # print(f"X: {X.shape}, Y: {Y.shape}")
 Xtrn = X[100:,:]; Ytrn = Y[100:] # training set
 Xtst = X[0:100,:]; Ytst = Y[0:100] # testing set
 #<----
 
-print(type(Xtrn))
-Xa = Xtrn[np.where(Ytrn==0)[0]]
-Xb = Xtrn[np.where(Ytrn==1)[0]]
-print(Xa)
-# Xa = Ytrn['0']
-# plt.hist([Xa[:,0], Xb[:,0]], bins=15)
-# plt.show()
 # Q1.1
 def iaml212cw2_q1_1():
-    fig, axs = plt.subplots(3, 3)
-    axs[0, 0].hist([Xa[:,0], Xb[:,0]], bins=15)
-    axs[0, 0].set_title('histogram')
-    axs[0, 1].hist([Xa[:,1], Xb[:,1]], bins=15)
-    axs[0, 1].set_title('Axis [0, 1]')
-    axs[0, 2].hist([Xa[:,2], Xb[:,2]], bins=15)
-    axs[0, 2].set_title('Axis [0, 1]')
-    axs[1, 0].hist([Xa[:,3], Xb[:,3]], bins=15)
-    axs[1, 0].set_title('Axis [1, 0]')
-    axs[1, 1].hist([Xa[:,4], Xb[:,4]], bins=15)
-    axs[1, 1].set_title('Axis [1, 1]')
-    axs[1, 2].hist([Xa[:,5], Xb[:,5]], bins=15)
-    axs[1, 2].set_title('Axis [1, 1]')
-    axs[2, 0].hist([Xa[:,6], Xb[:,6]], bins=15)
-    axs[2, 0].set_title('Axis [1, 1]')
-    axs[2, 1].hist([Xa[:,7], Xb[:,7]], bins=15)
-    axs[2, 1].set_title('Axis [1, 1]')
-    axs[2, 2].hist([Xa[:,8], Xb[:,8]], bins=15)
-    axs[2, 2].set_title('Axis [1, 1]')
+    Xa = Xtrn[np.where(Ytrn==0)[0]] #instances of class 0
+    Xb = Xtrn[np.where(Ytrn==1)[0]] #instances of class 1
+
+    fig, axs = plt.subplots(3, 3) #ploting 3 by 3 histogram
+    axs = axs.ravel()
+
+    for i in range(9):
+        axs[i].hist([Xa[:,i], Xb[:,i]], bins=15)
+        axs[i].set(xlabel=f"A{i}")
+
     for ax in axs.flat:
-        ax.set(xlabel='x-label', ylabel='y-label')
+        ax.set(ylabel='frequency')
         ax.grid()
-        as.label_outer()
+        # ax.label_outer()
 
     plt.show()
 iaml212cw2_q1_1()   # comment this out when you run the function
-#
-# # Q1.2
+
+# Q1.2
 # def iaml212cw2_q1_2():
-# #
-# # iaml212cw2_q1_2()   # comment this out when you run the function
+#     for i in range(9):
+
+# iaml212cw2_q1_2()   # comment this out when you run the function
 #
 # # Q1.3
 # def iaml212cw2_q1_3():
