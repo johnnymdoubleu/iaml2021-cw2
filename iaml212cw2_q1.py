@@ -50,7 +50,7 @@ def iaml212cw2_q1_1():
         # ax.label_outer()
 
     plt.show()
-iaml212cw2_q1_1()   # comment this out when you run the function
+# iaml212cw2_q1_1()   # comment this out when you run the function
 
 # Q1.2
 # def iaml212cw2_q1_2():
