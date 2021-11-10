@@ -38,6 +38,7 @@ def iaml212cw2_q2_1():
     # print(Xtrndf.describe())
 
 
+
     print('Number of instances: {}, number of attributes: {}'.format(Xtst.shape[0], Xtst.shape[1]))
     Xtstdf = pd.DataFrame(Xtst)
     print(np.max(Xtst), np.min(Xtst), np.mean(Xtst), np.std(Xtst))
