@@ -23,6 +23,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import accuracy_score, confusion_matrix, r2_score, mean_squared_error
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 from iaml_cw2_helpers import *
 from iaml212cw2_my_helpers import *
 
@@ -95,8 +96,8 @@ def iaml212cw2_q1_4():
         vari = np.array([np.var(Xtrn[:,i], axis=0, ddof=1),str(i)])
         samVar[i]=vari
     samVar = samVar[samVar[:,0].argsort()[::-1]] #sorting in descending order
-    print(samVar)
-    print("The unbiased sample variance of each attribute are")
+#     print(samVar)
+    print(f"The unbiased sample variance of each attribute are {samVar}")
     # print(samVar[:,0])
 
     #Q1.4.1 plot
@@ -106,10 +107,12 @@ def iaml212cw2_q1_4():
     plt.ylabel("Explained Variance")
     plt.xticks(np.arange(9), samVar[:,1].astype(str))
     plt.legend()
+    plt.grid()
     plt.savefig("results/1_4_1.png")
     plt.show()
 
     sum = samVar.sum(axis=0)[0]
+    print(f"The sum of all the variances is {sum}")
     cumsamVar = np.cumsum(samVar[:,0]/sum)
     print(f"Cumulative explained variance ratio of each Attributes are {cumsamVar}")
     #Q1.4.2 plot
@@ -119,42 +122,77 @@ def iaml212cw2_q1_4():
     plt.ylabel("Cumulative Explained Variance")
     plt.xticks(np.arange(9), samVar[:,1].astype(str))
     plt.legend()
+    plt.grid()
     plt.savefig("results/1_4_2.png")
     plt.show()
 
-iaml212cw2_q1_4()   # comment this out when you run the function
-#
+# iaml212cw2_q1_4()   # comment this out when you run the function
+
 # # Q1.5
 def iaml212cw2_q1_5():
     pca = PCA().fit(Xtrn)
-    # print(pca)
-    # print(pca.explained_variance_)
-    # print(np.cumsum(pca.explained_variance_ratio_))
+    print(f"The total amount of variance is {sum(pca.explained_variance_)}")
 
-    plt.plot(pca.explained_variance_, label="Varaince explained by each of the Attributes")
-    plt.title("Varaince explained by each of the Attributes")
-    plt.xlabel("Attributes")
+    plt.plot(pca.explained_variance_, label="Varaince explained by each Principal Components")
+    plt.title("Varaince explained by each Principal Componenets")
+    plt.xlabel("Principal Components")
     plt.ylabel("Explained Variance")
     # plt.xticks(np.arange(9), samVar[:,1].astype(str))
     plt.legend()
+    plt.grid()
     plt.savefig("results/1_5_1.png")
     plt.show()
 
-    print(f"cumsumVar is {np.cumsum(pca.explained_variance_ratio_)}")
+    print(f"Cumulative explained variance ratio is {np.cumsum(pca.explained_variance_ratio_)}")
     plt.plot(np.cumsum(pca.explained_variance_ratio_), label="cumulative explained variance ratio")
     plt.title("cumulative explained variance ratio")
-    plt.xlabel("Attributes")
+    plt.xlabel("Principal Components")
     plt.ylabel("Cumulative Explained Variance")
     # plt.xticks(np.arange(9), samVar[:,1].astype(str))
     plt.legend()
+    plt.grid()
     plt.savefig("results/1_5_2.png")
     plt.show()
-iaml212cw2_q1_5()   # comment this out when you run the function
-#
-# # Q1.6
-# def iaml212cw2_q1_6():
-# #
-# # iaml212cw2_q1_6()   # comment this out when you run the function
+
+    pca = PCA(2)
+    Xtrn_m = Xtrn - Xtrn.mean(axis=0)
+    x2d = pca.fit(Xtrn_m)
+    compo = x2d.components_
+    colours = ['b','r']
+
+    classes = [0,1]
+    newx = np.dot(Xtrn_m, compo.T)
+    for colour, target_name in zip(colours, classes):
+        plt.scatter(newx[Ytrn==target_name, 0], newx[Ytrn==target_name, 1], color=colour, alpha=.8, s=10, lw=2)
+
+    plt.grid()
+    plt.title("Principal Component of Training Set")
+    plt.show()
+
+    print(np.corrcoef(Xtrn, compo[0]))
+    print(np.corrcoef(Xtrn, compo[1]))
+# iaml212cw2_q1_5()   # comment this out when you run the function   # comment this out when you run the function
+
+#Q1.6
+def iaml212cw2_q1_6():
+    scaler = StandardScaler().fit(Xtrn)
+    Xtrn_s = scaler.transform(Xtrn)
+    Xtst_s = scaler.transform(Xtst)
+
+    Xtrn_sm = Xtrn_s - Xtrn_s.mean(axis=0)
+    pca = PCA(2)
+    x2d = pca.fit(Xtrn_sm)
+    compo = x2d.components_
+    newx = np.dot(Xtrn_sm, compo.T)
+    colours = ['b','r']
+    classes = [0,1]
+    for colour, target_name in zip(colours, classes):
+        plt.scatter(newx[Ytrn==target_name, 0], newx[Ytrn==target_name, 1], c = colour, alpha=.8, lw=2,
+                    label=target_name, s=10)
+    plt.grid()
+    plt.show()
+
+iaml212cw2_q1_6()   # comment this out when you run the function
 #
 # # Q1.7
 # def iaml212cw2_q1_7():

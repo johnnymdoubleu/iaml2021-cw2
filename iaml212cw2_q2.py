@@ -16,10 +16,18 @@
 import numpy as np
 import pandas as pd
 import scipy
+from scipy.stats import itemfreq
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.metrics.pairwise import euclidean_distances
+from sklearn.cluster import KMeans
+from sklearn.metrics import adjusted_rand_score
+from sklearn.decomposition import PCA
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from pandas.api.types import CategoricalDtype
 from iaml_cw2_helpers import *
-# from iaml212cw2_my_helpers import *
 Xtrn_org, Ytrn_org, Xtst_org, Ytst_org = load_Q2_dataset()
 
 Xtrn = Xtrn_org / 255.0
@@ -31,29 +39,94 @@ Xtrn_m = Xtrn - Xmean; Xtst_m = Xtst - Xmean # Mean normalised versions
 #<----
 
 # Q2.1
+# def iaml212cw2_q2_1():
+#     print('Number of instances: {}, number of attributes: {}'.format(Xtrn.shape[0], Xtrn.shape[1]))
+#     Xtrndf = pd.DataFrame(Xtrn)
+#     print(np.max(Xtrn), np.min(Xtrn), np.mean(Xtrn), np.std(Xtrn))
+#     # print(Xtrndf.describe())
+#
+#
+#
+#     print('Number of instances: {}, number of attributes: {}'.format(Xtst.shape[0], Xtst.shape[1]))
+#     Xtstdf = pd.DataFrame(Xtst)
+#     print(np.max(Xtst), np.min(Xtst), np.mean(Xtst), np.std(Xtst))
+# iaml212cw2_q2_1()   # comment this out when you run the function
+
 def iaml212cw2_q2_1():
     print('Number of instances: {}, number of attributes: {}'.format(Xtrn.shape[0], Xtrn.shape[1]))
     Xtrndf = pd.DataFrame(Xtrn)
     print(np.max(Xtrn), np.min(Xtrn), np.mean(Xtrn), np.std(Xtrn))
     # print(Xtrndf.describe())
 
-
-
     print('Number of instances: {}, number of attributes: {}'.format(Xtst.shape[0], Xtst.shape[1]))
     Xtstdf = pd.DataFrame(Xtst)
     print(np.max(Xtst), np.min(Xtst), np.mean(Xtst), np.std(Xtst))
     # print(Xtstdf.describe())
     # Xtst.describe()
-iaml212cw2_q2_1()   # comment this out when you run the function
+    plt.imshow(Xtrn[0].reshape((28,28)), cmap="gray_r")
+    plt.title(f"Class {Ytrn[0]}")
+    plt.show()
+    plt.imshow(Xtrn[1].reshape((28,28)), cmap="gray_r")
+    plt.title(f"Class {Ytrn[1]}")
+    plt.show()
+# iaml212cw2_q2_1()
 
 # Q2.2
-# def iaml212cw2_q2_2():
-#
+def iaml212cw2_q2_2():
+    euclidean_distances(Xtrn_m, Xtrn_m)
+    euclidean_distances(Xtrn, Xtrn)
+# they are exactly the same. Normalised means both instances are mean vector subtracted.
+#Thus subtracting two instances will cancel of the mean and eventually compute the same distance
+    np.mean(Xtst, axis=0)
+    np.mean(Xtrn, axis=0)
+# We can clearly see the difference in the mean vector.
+# However, we want only want to use the mean vector of the training set.
+# This is because we want to keep the testing data to be a new set of data
+# this means that we are testing the test set with prior knowledge of the data set leading inaccuracy
+# sampling errors may negatively bias the predictions
+# our aim is to test and evaluate whether our model can fit the testing data.
+
 # iaml212cw2_q2_2()   # comment this out when you run the function
 
 # Q2.3
-# def iaml212cw2_q2_3():
-#
+def iaml212cw2_q2_3():
+    classes = [0,5,8]
+    classcentres = []
+    km3 = KMeans(n_clusters = 3, random_state=0)
+    for i in classes:
+        km3.fit(Xtrn[Ytrn==i])
+        centres = km3.cluster_centers_
+        for ci in centres:
+            classcentres.append(ci)
+
+    fig, axs = plt.subplots(3, 3) #ploting 3 by 3 histogram
+    axs = axs.ravel()
+
+    for i in range(len(classcentres)):
+        axs[i].imshow(classcentres[i].reshape((28,28)),cmap = "gray_r")
+        axs[i].set(xlabel=f"A{i}")
+
+    plt.savefig("results/2_3_1.png")
+    plt.show()
+
+    classes = [0,5,8]
+    classcentres = []
+    km5 = KMeans(n_clusters = 5, random_state=0)
+    for i in classes:
+        km5.fit(Xtrn[Ytrn==i])
+        centres = km5.cluster_centers_
+        for ci in centres:
+            classcentres.append(ci)
+
+    fig, axs = plt.subplots(3, 5) #ploting 3 by 3 histogram
+    axs = axs.ravel()
+
+    for i in range(len(classcentres)):
+        axs[i].imshow(classcentres[i].reshape((28,28)),cmap = "gray_r")
+        axs[i].set(xlabel=f"A{i}")
+
+    plt.savefig("results/2_3_2.png")
+    plt.show()
 # iaml212cw2_q2_3()   # comment this out when you run the function
 
 # Q2.4
@@ -62,14 +135,41 @@ iaml212cw2_q2_1()   # comment this out when you run the function
 # iaml212cw2_q2_4()   # comment this out when you run the function
 
 # Q2.5
-# def iaml212cw2_q2_5():
-#
+def iaml212cw2_q2_5():
+    lr = LogisticRegression(max_iter=1000, random_state=0)
+    lr.fit(Xtrn_m, Ytrn)
+    print(f'Classification accuracy on training set: {lr.score(Xtrn_m, Ytrn):.3f}')
+    print(f'Classification accuracy on testing set: {lr.score(Xtst_m, Ytst):.3f}')
+
+    print(lr.predict(Xtst_m))
+    print(Ytst)
+
+    predicty = lr.predict(Xtst_m)
+    nomatchidx = []
+    for i in range(len(Ytst)):
+        if (Ytst[i]!=predicty[i]):
+            nomatchidx.append(Ytst[i])
+    np.unique(nomatchidx, return_counts=True)
+
+    u, count = np.unique(nomatchidx, return_counts=True)
+    countsort = np.argsort(-count)
+    u = u[countsort]
+    u[0:5]
+    alphabet = []
+    for i in u[0:5]:
+        alphabet.append(chr(ord('@')+i+1))
+    print(u[0:5])
+    print(alphabet)
+
 # iaml212cw2_q2_5()   # comment this out when you run the function
 
 # Q2.6
-# def iaml212cw2_q2_6():
-#
-# iaml212cw2_q2_6()   # comment this out when you run the function
+def iaml212cw2_q2_6():
+    lr = LogisticRegression(max_iter=10000, random_state=0)
+    lr.fit(Xtrn_m, Ytrn)
+    print(f'Classification accuracy on training set: {lr.score(Xtrn_m, Ytrn):.3f}')
+    print(f'Classification accuracy on testing set: {lr.score(Xtst_m, Ytst):.3f}')
+iaml212cw2_q2_6()   # comment this out when you run the function
 
 # Q2.7
 # def iaml212cw2_q2_7():
