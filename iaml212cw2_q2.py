@@ -39,26 +39,14 @@ Xtrn_m = Xtrn - Xmean; Xtst_m = Xtst - Xmean # Mean normalised versions
 #<----
 
 # Q2.1
-# def iaml212cw2_q2_1():
-#     print('Number of instances: {}, number of attributes: {}'.format(Xtrn.shape[0], Xtrn.shape[1]))
-#     Xtrndf = pd.DataFrame(Xtrn)
-#     print(np.max(Xtrn), np.min(Xtrn), np.mean(Xtrn), np.std(Xtrn))
-#     # print(Xtrndf.describe())
-#
-#
-#
-#     print('Number of instances: {}, number of attributes: {}'.format(Xtst.shape[0], Xtst.shape[1]))
-#     Xtstdf = pd.DataFrame(Xtst)
-#     print(np.max(Xtst), np.min(Xtst), np.mean(Xtst), np.std(Xtst))
-# iaml212cw2_q2_1()   # comment this out when you run the function
 
 def iaml212cw2_q2_1():
-    print('Number of instances: {}, number of attributes: {}'.format(Xtrn.shape[0], Xtrn.shape[1]))
+    print(f'Number of instances: {Xtrn.shape[0]}, number of attributes: {Xtrn.shape[1]}')
     Xtrndf = pd.DataFrame(Xtrn)
     print(np.max(Xtrn), np.min(Xtrn), np.mean(Xtrn), np.std(Xtrn))
     # print(Xtrndf.describe())
 
-    print('Number of instances: {}, number of attributes: {}'.format(Xtst.shape[0], Xtst.shape[1]))
+    print(f'Number of instances: {Xtst.shape[0]}, number of attributes: {Xtst.shape[1]}')
     Xtstdf = pd.DataFrame(Xtst)
     print(np.max(Xtst), np.min(Xtst), np.mean(Xtst), np.std(Xtst))
     # print(Xtstdf.describe())
@@ -69,7 +57,7 @@ def iaml212cw2_q2_1():
     plt.imshow(Xtrn[1].reshape((28,28)), cmap="gray_r")
     plt.title(f"Class {Ytrn[1]}")
     plt.show()
-# iaml212cw2_q2_1()
+iaml212cw2_q2_1()
 
 # Q2.2
 def iaml212cw2_q2_2():
