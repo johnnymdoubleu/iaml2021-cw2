@@ -146,6 +146,7 @@ def iaml212cw2_q2_5():
     alphabet = []
     for i in u[0:5]:
         alphabet.append(chr(ord('@')+i+1))
+
     print(u[0:5])
     print(alphabet)
 
