@@ -23,7 +23,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import accuracy_score, confusion_matrix, r2_score, mean_squared_error
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import StratifiedKFold, GridSearchCV
+from sklearn.svm import SVC
+from sklearn.naive_bayes import MultinomialNB
+
 from iaml_cw2_helpers import *
 from iaml212cw2_my_helpers import *
 
@@ -31,7 +34,6 @@ from iaml212cw2_my_helpers import *
 X, Y = load_Q1_dataset()
 
 Xtrn = X[100:,:]; Ytrn = Y[100:] # training set
-# print(Xtrn.shape, Ytrn.shape)
 Xtst = X[0:100,:]; Ytst = Y[0:100] # testing set
 #<----
 
