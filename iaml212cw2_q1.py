@@ -294,7 +294,7 @@ def iaml212cw2_q1_9():
     # Q1.9 a)
     #computing the mean vector and covariance matrix
     mean = Ztrn.mean(axis=0)
-    covmat = np.cov(Ztrn[:,0], Ztrn[:,1],ddof=0)
+    covmat = np.cov(Ztrn[:,0], Ztrn[:,1],ddof=1)
     print(mean)
     print(covmat)
 
