@@ -18,14 +18,13 @@ import scipy
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import accuracy_score, confusion_matrix, r2_score, mean_squared_error
+from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.decomposition import PCA
 from sklearn.model_selection import StratifiedKFold, GridSearchCV
 from sklearn.svm import SVC
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import GaussianNB
 
 from iaml_cw2_helpers import *
 from iaml212cw2_my_helpers import *
@@ -35,6 +34,11 @@ X, Y = load_Q1_dataset()
 
 Xtrn = X[100:,:]; Ytrn = Y[100:] # training set
 Xtst = X[0:100,:]; Ytst = Y[0:100] # testing set
+
+scaler = StandardScaler().fit(Xtrn)
+Xtrn_s = scaler.transform(Xtrn) #scaling training set
+Xtst_s = scaler.transform(Xtst) #scaling testing set
+
 #<----
 
 # Q1.1
@@ -42,7 +46,7 @@ def iaml212cw2_q1_1():
     Xa = Xtrn[np.where(Ytrn==0)[0]] #instances of class 0
     Xb = Xtrn[np.where(Ytrn==1)[0]] #instances of class 1
 
-    fig, axs = plt.subplots(3, 3) #ploting 3 by 3 histogram
+    fig, axs = plt.subplots(3, 3, figsize=(10,9)) #ploting 3 by 3 histogram
     axs = axs.ravel()
 
     for i in range(9):
@@ -50,37 +54,25 @@ def iaml212cw2_q1_1():
         axs[i].set(xlabel=f"A{i}")
 
     for ax in axs.flat:
-        ax.set(ylabel='frequency')
+#         ax.set(ylabel='frequency')
         ax.grid()
         # ax.label_outer()
+#     fig.tight_layout()
+    fig.subplots_adjust(bottom=0.01)   ##  Need to play with this number.
+
+    fig.legend(labels=['class 0', 'class 1'], loc="right")
+
+    fig.suptitle("Histogram of each attribute by class")
+    fig.supylabel("Count")
     plt.savefig("results/1_1.png")
     plt.show()
-# iaml212cw2_q1_1()   # comment this out when you run the function
+# iaml212cw2_q1_1()
 
 # Q1.2
 def iaml212cw2_q1_2():
     for i in range(9):
-        print(np.corrcoef(Xtrn[:,i], Ytrn))
+        print(np.corrcoef(Xtrn[:,i], Ytrn)[0][1])
 # iaml212cw2_q1_2()   # comment this out when you run the function
-#
-# [[1.        0.4911759]
-#  [0.4911759 1.       ]]
-# [[1.        0.0874059]
-#  [0.0874059 1.       ]]
-# [[1.         0.22728719]
-#  [0.22728719 1.        ]]
-# [[1.         0.20736605]
-#  [0.20736605 1.        ]]
-# [[1.         0.10772035]
-#  [0.10772035 1.        ]]
-# [[1.        0.1856714]
-#  [0.1856714 1.       ]]
-# [[1.         0.07626074]
-#  [0.07626074 1.        ]]
-# [[1.         0.30445377]
-#  [0.30445377 1.        ]]
-# [[1.         0.24034733]
-#  [0.24034733 1.        ]]
 
 # Q1.3
 # def iaml212cw2_q1_3():
@@ -89,21 +81,22 @@ def iaml212cw2_q1_2():
 
  # iaml212cw2_q1_3()   # comment this out when you run the function
 #
-# Q1.4
 def iaml212cw2_q1_4():
     samVar = np.zeros((9,2)) #initialising numpy array to store the unbiased smaple variance
-    # print(samVar)
+
+    #computing unbiased sample variance of each attribute
     for i in range(9):
-        #computing unbiased sample variance of each attribute
         vari = np.array([np.var(Xtrn[:,i], axis=0, ddof=1),str(i)])
         samVar[i]=vari
     samVar = samVar[samVar[:,0].argsort()[::-1]] #sorting in descending order
-#     print(samVar)
     print(f"The unbiased sample variance of each attribute are {samVar}")
-    # print(samVar[:,0])
 
-    #Q1.4.1 plot
-    plt.plot(samVar[:,0], label="Varaince explained by each of the Attributes")
+    #Q1.4 a)
+    sum = samVar.sum(axis=0)[0]
+    print(f"The sum of all the variances is {sum}")
+
+    #Q1.4 b) i) plot
+    plt.bar(range(len(samVar[:,0])), samVar[:,0], label="Variance explained by each of the Attributes")
     plt.title("Varaince explained by each of the Attributes")
     plt.xlabel("Attributes")
     plt.ylabel("Explained Variance")
@@ -113,14 +106,12 @@ def iaml212cw2_q1_4():
     plt.savefig("results/1_4_1.png")
     plt.show()
 
-    sum = samVar.sum(axis=0)[0]
-    print(f"The sum of all the variances is {sum}")
+    #Q1.4 b) ii)
     cumsamVar = np.cumsum(samVar[:,0]/sum)
-    print(f"Cumulative explained variance ratio of each Attributes are {cumsamVar}")
-    #Q1.4.2 plot
+    print(f"Cumulative explained variance ratio of each Attributes are\n{cumsamVar}")
     plt.plot(cumsamVar, label="cumulative explained variance ratio")
     plt.title("cumulative explained variance ratio")
-    plt.xlabel("Attributes")
+    plt.xlabel("Attribute No.")
     plt.ylabel("Cumulative Explained Variance")
     plt.xticks(np.arange(9), samVar[:,1].astype(str))
     plt.legend()
@@ -132,86 +123,220 @@ def iaml212cw2_q1_4():
 
 # # Q1.5
 def iaml212cw2_q1_5():
-    pca = PCA().fit(Xtrn)
+    pca = PCA().fit(Xtrn) #fitting Training set to PCA()
+    #Q1.5 a)
     print(f"The total amount of variance is {sum(pca.explained_variance_)}")
 
-    plt.plot(pca.explained_variance_, label="Varaince explained by each Principal Components")
+    #Q1.5 b) i)
+    plt.bar(range(1,10), pca.explained_variance_, label="Varaianc")
     plt.title("Varaince explained by each Principal Componenets")
     plt.xlabel("Principal Components")
     plt.ylabel("Explained Variance")
-    # plt.xticks(np.arange(9), samVar[:,1].astype(str))
+    plt.xticks(np.arange(1,10))
     plt.legend()
     plt.grid()
     plt.savefig("results/1_5_1.png")
     plt.show()
 
+    #Q1.5 b) ii)
     print(f"Cumulative explained variance ratio is {np.cumsum(pca.explained_variance_ratio_)}")
     plt.plot(np.cumsum(pca.explained_variance_ratio_), label="cumulative explained variance ratio")
     plt.title("cumulative explained variance ratio")
     plt.xlabel("Principal Components")
     plt.ylabel("Cumulative Explained Variance")
-    # plt.xticks(np.arange(9), samVar[:,1].astype(str))
+    plt.xticks(np.arange(0,9),[1,2,3,4,5,6,7,8,9])
     plt.legend()
     plt.grid()
     plt.savefig("results/1_5_2.png")
     plt.show()
 
-    pca = PCA(2)
-    Xtrn_m = Xtrn - Xtrn.mean(axis=0)
-    x2d = pca.fit(Xtrn_m)
-    compo = x2d.components_
+    #Q1.5 c)
+    x2d = pca.fit(Xtrn)
+    compo = x2d.components_[0:2] #taking the first two componets of PCA
     colours = ['b','r']
-
     classes = [0,1]
-    newx = np.dot(Xtrn_m, compo.T)
-    for colour, target_name in zip(colours, classes):
-        plt.scatter(newx[Ytrn==target_name, 0], newx[Ytrn==target_name, 1], color=colour, alpha=.8, s=10, lw=2)
+    newx = np.dot(Xtrn, compo.T) #computing projection
 
+    #plotting
+    for colour, target_name in zip(colours, classes):
+        plt.scatter(newx[Ytrn==target_name, 0], newx[Ytrn==target_name, 1], color=colour, alpha=.8, s=10,
+                    lw=2, label=f"class {target_name}")
     plt.grid()
-    plt.title("Principal Component of Training Set")
+    plt.legend()
+    plt.title("Mapping of training instances on principal components")
+    plt.xlabel("Component 1")
+    plt.ylabel("Component 2")
+    plt.savefig("results/1_5_3.png")
     plt.show()
 
-    print(np.corrcoef(Xtrn, compo[0]))
-    print(np.corrcoef(Xtrn, compo[1]))
-# iaml212cw2_q1_5()   # comment this out when you run the function   # comment this out when you run the function
+    #Q1/5 d)
+    for i in range(9):
+        print(np.corrcoef(Xtrn[:,i], newx[:,0])[0][1], np.corrcoef(Xtrn[:,i], newx[:,1])[0][1])
+
+# iaml212cw2_q1_5()   # comment this out when you run the function
+
+
 
 #Q1.6
 def iaml212cw2_q1_6():
-    scaler = StandardScaler().fit(Xtrn)
-    Xtrn_s = scaler.transform(Xtrn)
-    Xtst_s = scaler.transform(Xtst)
 
-    Xtrn_sm = Xtrn_s - Xtrn_s.mean(axis=0)
-    pca = PCA(2)
-    x2d = pca.fit(Xtrn_sm)
-    compo = x2d.components_
-    newx = np.dot(Xtrn_sm, compo.T)
-    colours = ['b','r']
-    classes = [0,1]
-    for colour, target_name in zip(colours, classes):
-        plt.scatter(newx[Ytrn==target_name, 0], newx[Ytrn==target_name, 1], c = colour, alpha=.8, lw=2,
-                    label=target_name, s=10)
+    #Q1.6 a)
+    pca = PCA().fit(Xtrn_s)
+    print(f"The total amount of variance is {sum(pca.explained_variance_)}")
+
+    #Q1.6 b) i)
+    plt.bar(range(1,10), pca.explained_variance_, label="Explained Variance")
+    plt.title("Varaince explained by each Principal Componenets")
+    plt.xlabel("Principal Components")
+    plt.ylabel("Explained Variance")
+    plt.xticks(np.arange(1,10))
+    plt.legend()
+    plt.grid()
+    plt.savefig("results/1_6_1.png")
+    plt.show()
+
+    #Q1.6 b) ii)
+    print(f"cumsumVar is {np.cumsum(pca.explained_variance_ratio_)}")
+    plt.plot(np.cumsum(pca.explained_variance_ratio_), label="cumulative explained variance ratio")
+    plt.title("cumulative explained variance ratio")
+    plt.xlabel("Principal Components")
+    plt.ylabel("Cumulative Explained Variance")
+    plt.xticks(np.arange(9), [1,2,3,4,5,6,7,8,9])
+    plt.legend()
     plt.grid()
     plt.show()
 
-iaml212cw2_q1_6()   # comment this out when you run the function
-#
-# # Q1.7
+    #Q1.6 c)
+
+    # Xtrn_sm = Xtrn_s - Xtrn_s.mean(axis=0)
+    x2d = pca.fit(Xtrn_s)
+    print(f"")
+    compo = x2d.components_[0:2] #PCA Components
+    colours = ['b','r']
+    newx_s = np.dot(Xtrn_s, compo.T)
+    classes = [0,1]
+    for colour, target_name in zip(colours, classes):
+        plt.scatter(newx_s[Ytrn==target_name, 0], newx_s[Ytrn==target_name, 1], c = colour, alpha=.8, lw=2,
+                    label=f"class {target_name}", s=10)
+    plt.title("Mapping of scaled training instances on principal components")
+    plt.xlabel("Component 1")
+    plt.ylabel("Component 2")
+    plt.legend()
+    plt.grid()
+    plt.savefig("results/1_6_2.png")
+    plt.show()
+
+
+    #Q1.6 d)
+    for i in range(9):
+        print(np.corrcoef(Xtrn_s[:,i], newx_s[:,0])[0][1], np.corrcoef(Xtrn_s[:,i], newx_s[:,1])[0][1])
+
+# iaml212cw2_q1_6()   # comment this out when you run the function
+
+# Q1.7
 # def iaml212cw2_q1_7():
-# #
-# # iaml212cw2_q1_7()   # comment this out when you run the function
 #
-# # Q1.8
-# def iaml212cw2_q1_8():
-# #
-# # iaml212cw2_q1_8()   # comment this out when you run the function
+# iaml212cw2_q1_7()   # comment this out when you run the function
 #
-# # Q1.9
-# def iaml212cw2_q1_9():
-# #
-# # iaml212cw2_q1_9()   # comment this out when you run the function
+# Q1.8
+def iaml212cw2_q1_8():
+    #generating penalty parameters
+    grid = {"C":np.logspace(-2,2,13)}
+    cv = StratifiedKFold(n_splits=5, shuffle=False)
+    result = GridSearchCV(SVC(), grid, cv=cv, return_train_score= True)
+    result.fit(Xtrn_s, Ytrn)
+
+
+    means_test = result.cv_results_['mean_test_score']
+    stds_test = result.cv_results_['std_test_score']
+    means_train = result.cv_results_['mean_train_score']
+    stds_train = result.cv_results_['std_train_score']
+    params = result.cv_results_['params']
+    print('mean, std for training set')
+    #
+    for mean, stdev, param in zip(means_train, stds_train, params):
+        print("%f (%f) with: %r" % (mean, stdev, param))
+
+    print('mean, std for validation set')
+    for mean, stdev, param in zip(means_test, stds_test, params):
+        print("%f (%f) with: %r" % (mean, stdev, param))
+
+    # Q1.8 a)
+    plt.errorbar(np.logspace(-2,2,13), means_train, stds_train, label="training set", capsize=5, fmt ='o-')
+    plt.errorbar(np.logspace(-2,2,13), means_test, stds_test, label="validation set", capsize=5, fmt ='o-')
+    plt.xscale('log')
+    plt.title("Mean classification accuracy vs regularisation penalty parameters")
+    plt.xlabel("Penalties")
+    plt.ylabel("Mean accuracy")
+    plt.grid()
+    plt.legend()
+    plt.savefig("results/1_8.png")
+    plt.show()
+
+    # Q1.8 c)
+    print("tuned hpyerparameters :(best parameters) ",result.best_params_)
+    print("accuracy :",result.best_score_)
+
+    #Q1.8 d)
+    svm = SVC(kernel="rbf", C = result.best_params_["C"])
+    model = svm.fit(Xtrn_s, Ytrn)
+    modelpre = model.predict(Xtst_s)
+    cm = confusion_matrix(Ytst, modelpre)
+    print(f"number of instances correctly classified : {cm[0,0]+cm[1,1]}")
+# iaml212cw2_q1_8()   # comment this out when you run the function
 #
-# # Q1.10
-# def iaml212cw2_q1_10():
-# #
-# # iaml212cw2_q1_10()   # comment this out when you run the function
+# Q1.9
+def iaml212cw2_q1_9():
+    xxtrn = Xtrn[Ytrn==0]
+    Ztrn = xxtrn[xxtrn[:,4]>=1]
+    Ztrn = Ztrn[:,[4,7]]
+
+    # Q1.9 a)
+    #computing the mean vector and covariance matrix
+    mean = Ztrn.mean(axis=0)
+    covmat = np.cov(Ztrn[:,0], Ztrn[:,1],ddof=0)
+    print(mean)
+    print(covmat)
+
+    #Q1.9 b)
+    rr = np.random.multivariate_normal(mean, covmat, 5000)
+    x = Ztrn[:,0]
+    y = Ztrn[:, 1]
+    xmin, xmax = np.min(y), np.max(x)
+    ymin, ymax = xmin, xmax
+
+    # Peform the kernel density estimate
+    xx, yy = np.mgrid[xmin:xmax:100j, ymin:ymax:100j]
+    positions = np.vstack([xx.ravel(), yy.ravel()])
+    values = np.vstack([x, y])
+    kernel = scipy.stats.gaussian_kde(values)
+    f = np.reshape(kernel(positions).T, xx.shape)
+
+    fig = plt.figure(figsize=(8,7))
+    ax = fig.gca()
+    # Contourf plot
+    cfset = ax.contourf(xx, yy, f, cmap='Blues')
+    # Contour plot
+    cset = ax.contour(xx, yy, f, colors='k', levels=10)
+    # ax.clabel(cset, inline=1, fontsize=15)
+    ax.scatter(x,y, color="orange", label="instances")
+    ax.set_xlabel('A4')
+    ax.set_ylabel('A7')
+    ax.set_title("Scatter and Contour Plot of Estimated Gaussian Distribution")
+    ax.grid()
+    ax.legend()
+    plt.savefig("results/1_9.png")
+    plt.show()
+# iaml212cw2_q1_9()   # comment this out when you run the function
+#
+# Q1.10
+def iaml212cw2_q1_10():
+    xxtrn = Xtrn[Ytrn==0]
+    Ztrn = xxtrn[xxtrn[:,4]>=1]
+    Ztrn = Ztrn[:,[4,7]]
+
+    mean = Ztrn.mean(axis=0)
+    covmat = np.cov(Ztrn[:,0], Ztrn[:,1], ddof=1)
+    print(mean)
+    print(covmat)
+iaml212cw2_q1_10()   # comment this out when you run the function
