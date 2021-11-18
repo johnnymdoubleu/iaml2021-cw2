@@ -113,8 +113,9 @@ def iaml212cw2_q1_4():
     plt.title("cumulative explained variance ratio")
     plt.xlabel("Number of Attributes")
     plt.ylabel("Cumulative Explained Variance")
+    plt.ylim(0,1.0)
     plt.xticks(np.arange(9), [1,2,3,4,5,6,7,8,9])
-    plt.legend()
+    plt.legend(loc="lower right")
     plt.grid()
     plt.savefig("results/1_4_2.png")
     plt.show()
@@ -145,7 +146,8 @@ def iaml212cw2_q1_5():
     plt.xlabel("Principal Components")
     plt.ylabel("Cumulative Explained Variance")
     plt.xticks(np.arange(9),[1,2,3,4,5,6,7,8,9])
-    plt.legend()
+    plt.ylim(0,1.0)
+    plt.legend(loc="lower right")
     plt.grid()
     plt.savefig("results/1_5_2.png")
     plt.show()
@@ -203,6 +205,7 @@ def iaml212cw2_q1_6():
     plt.ylabel("Cumulative Explained Variance")
     plt.xticks(np.arange(9), [1,2,3,4,5,6,7,8,9])
     plt.legend()
+    plt.ylim(0,1)
     plt.grid()
     plt.savefig("results/1_6_2.png")
     plt.show()
@@ -285,6 +288,7 @@ def iaml212cw2_q1_8():
     model = svm.fit(Xtrn_s, Ytrn)
     modelpre = model.predict(Xtst_s)
     cm = confusion_matrix(Ytst, modelpre)
+    print(f"The classification accuracy is {model.score(Xtst_s, Ytst)}")
     print(f"number of instances correctly classified : {cm[0,0]+cm[1,1]}")
 # iaml212cw2_q1_8()   # comment this out when you run the function
 #
@@ -330,7 +334,7 @@ def iaml212cw2_q1_9():
     ax.legend()
     plt.savefig("results/1_9.png")
     plt.show()
-# iaml212cw2_q1_9()   # comment this out when you run the function
+iaml212cw2_q1_9()   # comment this out when you run the function
 #
 # Q1.10
 def iaml212cw2_q1_10():

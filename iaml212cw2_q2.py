@@ -41,38 +41,31 @@ Xtrn_m = Xtrn - Xmean; Xtst_m = Xtst - Xmean # Mean normalised versions
 # Q2.1
 
 def iaml212cw2_q2_1():
-    print(f'Number of instances: {Xtrn.shape[0]}, number of attributes: {Xtrn.shape[1]}')
+    print('Number of instances: {}, number of attributes: {}'.format(Xtrn.shape[0], Xtrn.shape[1]))
     Xtrndf = pd.DataFrame(Xtrn)
     print(np.max(Xtrn), np.min(Xtrn), np.mean(Xtrn), np.std(Xtrn))
-    # print(Xtrndf.describe())
 
-    print(f'Number of instances: {Xtst.shape[0]}, number of attributes: {Xtst.shape[1]}')
+    print('Number of instances: {}, number of attributes: {}'.format(Xtst.shape[0], Xtst.shape[1]))
     Xtstdf = pd.DataFrame(Xtst)
     print(np.max(Xtst), np.min(Xtst), np.mean(Xtst), np.std(Xtst))
-    # print(Xtstdf.describe())
-    # Xtst.describe()
-    plt.imshow(Xtrn[0].reshape((28,28)), cmap="gray_r")
+
+    plt.imshow(Xtrn[0].reshape((28,28)).T, cmap="gray_r")
     plt.title(f"Class {Ytrn[0]}")
+    plt.savefig("results/2_1_1.png")
     plt.show()
-    plt.imshow(Xtrn[1].reshape((28,28)), cmap="gray_r")
+    plt.imshow(Xtrn[1].reshape((28,28)).T, cmap="gray_r")
     plt.title(f"Class {Ytrn[1]}")
+    plt.savefig("results/2_1_2.png")
     plt.show()
-iaml212cw2_q2_1()
+# iaml212cw2_q2_1()
 
 # Q2.2
 def iaml212cw2_q2_2():
     euclidean_distances(Xtrn_m, Xtrn_m)
     euclidean_distances(Xtrn, Xtrn)
-# they are exactly the same. Normalised means both instances are mean vector subtracted.
-#Thus subtracting two instances will cancel of the mean and eventually compute the same distance
+
     np.mean(Xtst, axis=0)
     np.mean(Xtrn, axis=0)
-# We can clearly see the difference in the mean vector.
-# However, we want only want to use the mean vector of the training set.
-# This is because we want to keep the testing data to be a new set of data
-# this means that we are testing the test set with prior knowledge of the data set leading inaccuracy
-# sampling errors may negatively bias the predictions
-# our aim is to test and evaluate whether our model can fit the testing data.
 
 # iaml212cw2_q2_2()   # comment this out when you run the function
 
@@ -91,13 +84,16 @@ def iaml212cw2_q2_3():
     axs = axs.ravel()
 
     for i in range(len(classcentres)):
-        axs[i].imshow(classcentres[i].reshape((28,28)),cmap = "gray_r")
-        axs[i].set(xlabel=f"A{i}")
+        axs[i].imshow(classcentres[i].reshape((28,28)).T,cmap = "gray_r")
 
+    for i in range(len(classes)):
+        axs[3*i].set(ylabel=f"Class {classes[i]}")
+        axs[6+i].set(xlabel=f"Cluser {i+1}")
+
+    fig.suptitle('Images of Cluster Centres for K=3')
     plt.savefig("results/2_3_1.png")
     plt.show()
 
-    classes = [0,5,8]
     classcentres = []
     km5 = KMeans(n_clusters = 5, random_state=0)
     for i in classes:
@@ -110,12 +106,17 @@ def iaml212cw2_q2_3():
     axs = axs.ravel()
 
     for i in range(len(classcentres)):
-        axs[i].imshow(classcentres[i].reshape((28,28)),cmap = "gray_r")
-        axs[i].set(xlabel=f"A{i}")
+        axs[i].imshow(classcentres[i].reshape((28,28)).T,cmap = "gray_r")
 
+    for i in range(len(classes)):
+        axs[5*i].set(ylabel=f"Class {classes[i]}")
+    for i in range(5):
+        axs[10+i].set(xlabel=f"Cluser {i+1}")
+
+    fig.suptitle('Images of Cluster Centres for K=5')
     plt.savefig("results/2_3_2.png")
     plt.show()
-# iaml212cw2_q2_3()   # comment this out when you run the function
+iaml212cw2_q2_3()   # comment this out when you run the function
 
 # Q2.4
 # def iaml212cw2_q2_4():
