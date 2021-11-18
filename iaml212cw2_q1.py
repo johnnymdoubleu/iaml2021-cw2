@@ -111,9 +111,9 @@ def iaml212cw2_q1_4():
     print(f"Cumulative explained variance ratio of each Attributes are\n{cumsamVar}")
     plt.plot(cumsamVar, label="cumulative explained variance ratio")
     plt.title("cumulative explained variance ratio")
-    plt.xlabel("Attribute No.")
+    plt.xlabel("Number of Attributes")
     plt.ylabel("Cumulative Explained Variance")
-    plt.xticks(np.arange(9), samVar[:,1].astype(str))
+    plt.xticks(np.arange(9), [1,2,3,4,5,6,7,8,9])
     plt.legend()
     plt.grid()
     plt.savefig("results/1_4_2.png")
@@ -128,7 +128,7 @@ def iaml212cw2_q1_5():
     print(f"The total amount of variance is {sum(pca.explained_variance_)}")
 
     #Q1.5 b) i)
-    plt.bar(range(1,10), pca.explained_variance_, label="Varaianc")
+    plt.bar(range(1,10), pca.explained_variance_, label="Explained Variance")
     plt.title("Varaince explained by each Principal Componenets")
     plt.xlabel("Principal Components")
     plt.ylabel("Explained Variance")
@@ -144,7 +144,7 @@ def iaml212cw2_q1_5():
     plt.title("cumulative explained variance ratio")
     plt.xlabel("Principal Components")
     plt.ylabel("Cumulative Explained Variance")
-    plt.xticks(np.arange(0,9),[1,2,3,4,5,6,7,8,9])
+    plt.xticks(np.arange(9),[1,2,3,4,5,6,7,8,9])
     plt.legend()
     plt.grid()
     plt.savefig("results/1_5_2.png")
@@ -204,6 +204,7 @@ def iaml212cw2_q1_6():
     plt.xticks(np.arange(9), [1,2,3,4,5,6,7,8,9])
     plt.legend()
     plt.grid()
+    plt.savefig("results/1_6_2.png")
     plt.show()
 
     #Q1.6 c)
@@ -223,7 +224,7 @@ def iaml212cw2_q1_6():
     plt.ylabel("Component 2")
     plt.legend()
     plt.grid()
-    plt.savefig("results/1_6_2.png")
+    plt.savefig("results/1_6_3.png")
     plt.show()
 
 
@@ -235,7 +236,9 @@ def iaml212cw2_q1_6():
 
 # Q1.7
 # def iaml212cw2_q1_7():
-#
+
+#       desribed in Assignment_2.pdf
+
 # iaml212cw2_q1_7()   # comment this out when you run the function
 #
 # Q1.8
@@ -339,4 +342,4 @@ def iaml212cw2_q1_10():
     covmat = np.cov(Ztrn[:,0], Ztrn[:,1], ddof=1)
     print(mean)
     print(covmat)
-iaml212cw2_q1_10()   # comment this out when you run the function
+# iaml212cw2_q1_10()   # comment this out when you run the function
