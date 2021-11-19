@@ -306,35 +306,31 @@ def iaml212cw2_q1_9():
     print(covmat)
 
     #Q1.9 b)
-    rr = np.random.multivariate_normal(mean, covmat, 5000)
-    x = Ztrn[:,0]
-    y = Ztrn[:, 1]
-    xmin, xmax = np.min(y), np.max(x)
-    ymin, ymax = xmin, xmax
+    minx = np.min(Ztrn[:,0])
+    maxx = np.max(Ztrn[:,0])
+    miny = np.min(Ztrn[:,1])
+    maxy = np.max(Ztrn[:,1])
 
-    # Peform the kernel density estimate
-    xx, yy = np.mgrid[xmin:xmax:100j, ymin:ymax:100j]
-    positions = np.vstack([xx.ravel(), yy.ravel()])
-    values = np.vstack([x, y])
-    kernel = scipy.stats.gaussian_kde(values)
-    f = np.reshape(kernel(positions).T, xx.shape)
+    n = 318
+    x = np.linspace(miny, maxx, n)
+    y = np.linspace(miny, maxx, n)
 
-    fig = plt.figure(figsize=(8,7))
-    ax = fig.gca()
-    # Contourf plot
-    cfset = ax.contourf(xx, yy, f, cmap='Blues')
-    # Contour plot
-    cset = ax.contour(xx, yy, f, colors='k', levels=10)
-    # ax.clabel(cset, inline=1, fontsize=15)
-    ax.scatter(x,y, color="orange", label="instances")
-    ax.set_xlabel('A4')
-    ax.set_ylabel('A7')
-    ax.set_title("Scatter and Contour Plot of Estimated Gaussian Distribution")
-    ax.grid()
-    ax.legend()
+    x,y = np.meshgrid(x,y)
+    pos = np.dstack((x,y))
+    rv = scipy.stats.multivariate_normal(mean, covmat)
+    z = rv.pdf(pos)
+    plt.figure(figsize=(9,6))
+    plt.contour(x,y,z, cmap="terrain")
+    plt.scatter(Ztrn[:,0], Ztrn[:,1], color='r', label="instances")
+
+    plt.xlabel('A4')
+    plt.ylabel('A7')
+    plt.title("Scatter and Contour Plot of Estimated Gaussian Distribution")
+    plt.grid()
+    plt.legend()
     plt.savefig("results/1_9.png")
     plt.show()
-iaml212cw2_q1_9()   # comment this out when you run the function
+# iaml212cw2_q1_9()   # comment this out when you run the function
 #
 # Q1.10
 def iaml212cw2_q1_10():
@@ -342,8 +338,35 @@ def iaml212cw2_q1_10():
     Ztrn = xxtrn[xxtrn[:,4]>=1]
     Ztrn = Ztrn[:,[4,7]]
 
-    mean = Ztrn.mean(axis=0)
-    covmat = np.cov(Ztrn[:,0], Ztrn[:,1], ddof=1)
-    print(mean)
-    print(covmat)
-# iaml212cw2_q1_10()   # comment this out when you run the function
+    gnb = GaussianNB()
+    gnb.fit(Ztrn, np.zeros(318))
+    print(gnb.theta_[0])
+    meannb = gnb.theta_[0]
+    print(f"The mean vector is: {meannb}")
+    # ztrn_cov_nb = np.diag(gnb.sigma_[0]*(len(Ztrn)-1)/len(Ztrn))
+    covnb = np.diag(gnb.sigma_[0])
+    print(f"The covariance matrix is:\n{covnb}")
+
+    minx = np.min(Ztrn[:,0])
+    maxx = np.max(Ztrn[:,0])
+    miny = np.min(Ztrn[:,1])
+    maxy = np.max(Ztrn[:,1])
+
+    n = 318
+    x = np.linspace(miny, maxx, n)
+    y = np.linspace(miny, maxx, n)
+    x,y = np.meshgrid(x,y)
+    pos = np.dstack((x,y))
+    rv = scipy.stats.multivariate_normal(meannb, covnb)
+    z = rv.pdf(pos)
+    plt.figure(figsize=(9,6))
+    plt.contour(x, y, z, cmap="terrain")
+    plt.scatter(Ztrn[:,0], Ztrn[:,1], color='r', label='instances')
+    plt.xlabel('A4')
+    plt.ylabel('A7')
+    plt.title("Scatter and Contour Plot of Estimated Gaussian Distribution with Naive Bayes")
+    plt.grid()
+    plt.legend()
+    plt.savefig("results/1_10.png")
+    plt.show()
+iaml212cw2_q1_10()   # comment this out when you run the function
