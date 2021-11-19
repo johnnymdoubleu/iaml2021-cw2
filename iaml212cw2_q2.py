@@ -116,7 +116,7 @@ def iaml212cw2_q2_3():
     fig.suptitle('Images of Cluster Centres for K=5')
     plt.savefig("results/2_3_2.png")
     plt.show()
-iaml212cw2_q2_3()   # comment this out when you run the function
+# iaml212cw2_q2_3()   # comment this out when you run the function
 
 # Q2.4
 # def iaml212cw2_q2_4():
@@ -127,11 +127,11 @@ iaml212cw2_q2_3()   # comment this out when you run the function
 def iaml212cw2_q2_5():
     lr = LogisticRegression(max_iter=1000, random_state=0)
     lr.fit(Xtrn_m, Ytrn)
-    print(f'Classification accuracy on training set: {lr.score(Xtrn_m, Ytrn):.3f}')
-    print(f'Classification accuracy on testing set: {lr.score(Xtst_m, Ytst):.3f}')
+    print(f'Classification accuracy on training set: {lr.score(Xtrn_m, Ytrn):.4f}')
+    print(f'Classification accuracy on test set: {lr.score(Xtst_m, Ytst):.4f}')
 
-    print(lr.predict(Xtst_m))
-    print(Ytst)
+    print(Ytst[Ytst==13])
+    print(lr.predict(Xtst_m)[Ytst==13])
 
     predicty = lr.predict(Xtst_m)
     nomatchidx = []
@@ -143,14 +143,12 @@ def iaml212cw2_q2_5():
     u, count = np.unique(nomatchidx, return_counts=True)
     countsort = np.argsort(-count)
     u = u[countsort]
-    u[0:5]
+    print(count[countsort][0:5])
     alphabet = []
     for i in u[0:5]:
         alphabet.append(chr(ord('@')+i+1))
-
     print(u[0:5])
     print(alphabet)
-
 # iaml212cw2_q2_5()   # comment this out when you run the function
 
 # Q2.6
@@ -159,12 +157,28 @@ def iaml212cw2_q2_6():
     lr.fit(Xtrn_m, Ytrn)
     print(f'Classification accuracy on training set: {lr.score(Xtrn_m, Ytrn):.3f}')
     print(f'Classification accuracy on testing set: {lr.score(Xtst_m, Ytst):.3f}')
-iaml212cw2_q2_6()   # comment this out when you run the function
+# iaml212cw2_q2_6()   # comment this out when you run the function
 
 # Q2.7
-# def iaml212cw2_q2_7():
-#
-# iaml212cw2_q2_7()   # comment this out when you run the function
+def iaml212cw2_q2_7():
+    covMatrix = np.cov(Xtrn_m[Ytrn==0], ddof=1)
+    print(covMatrix.shape)
+    print(np.mean(covMatrix))
+    print(np.max(covMatrix), np.min(covMatrix))
+
+    covMatrix = np.cov(Xtrn_m[Ytrn==0], ddof=1)
+    print(covMatrix.shape)
+    print(np.mean(covMatrix))
+    print(np.max(covMatrix), np.min(covMatrix))
+
+    plt.hist(di, bins=15, label="diagonal values")
+    plt.title("Histogram of the diagonal values")
+    plt.xlabel("Covariances")
+    plt.ylabel("Count")
+    plt.grid()
+    plt.legend()
+    plt.show()
+iaml212cw2_q2_7()   # comment this out when you run the function
 
 # Q2.8
 # def iaml212cw2_q2_8():
