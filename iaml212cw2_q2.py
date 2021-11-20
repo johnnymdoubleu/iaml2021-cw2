@@ -40,14 +40,19 @@ Xtrn_m = Xtrn - Xmean; Xtst_m = Xtst - Xmean # Mean normalised versions
 # Q2.1
 
 def iaml212cw2_q2_1():
+    #Q2.1 a)
+
+    #Training Set
     print('Number of instances: {}, number of attributes: {}'.format(Xtrn.shape[0], Xtrn.shape[1]))
     Xtrndf = pd.DataFrame(Xtrn)
     print(np.max(Xtrn), np.min(Xtrn), np.mean(Xtrn), np.std(Xtrn))
 
+    #Testing Set
     print('Number of instances: {}, number of attributes: {}'.format(Xtst.shape[0], Xtst.shape[1]))
     Xtstdf = pd.DataFrame(Xtst)
     print(np.max(Xtst), np.min(Xtst), np.mean(Xtst), np.std(Xtst))
 
+    #Q2.1 b)
     plt.imshow(Xtrn[0].reshape((28,28)).T, cmap="gray_r")
     plt.title(f"Class {Ytrn[0]}")
     plt.savefig("results/2_1_1.png")
@@ -60,9 +65,13 @@ def iaml212cw2_q2_1():
 
 # Q2.2
 def iaml212cw2_q2_2():
-    euclidean_distances(Xtrn_m, Xtrn_m)
-    euclidean_distances(Xtrn, Xtrn)
+    #Q2.2 a)
+    #pairwise euclidean distances of training set
+    print(euclidean_distances(Xtrn_m, Xtrn_m))
+    print(euclidean_distances(Xtrn, Xtrn))
 
+    # Q2.2 b)
+    #mean values of training and testing set
     np.mean(Xtst, axis=0)
     np.mean(Xtrn, axis=0)
 
@@ -70,6 +79,8 @@ def iaml212cw2_q2_2():
 
 # Q2.3
 def iaml212cw2_q2_3():
+    # Q2.3 a)
+    # k=3
     classes = [0,5,8]
     classcentres = []
     km3 = KMeans(n_clusters = 3, random_state=0)
@@ -93,6 +104,7 @@ def iaml212cw2_q2_3():
     plt.savefig("results/2_3_1.png")
     plt.show()
 
+    # k=5
     classcentres = []
     km5 = KMeans(n_clusters = 5, random_state=0)
     for i in classes:
@@ -126,11 +138,13 @@ def iaml212cw2_q2_3():
 
 # Q2.5
 def iaml212cw2_q2_5():
+    # Q2.5 a)
     lr = LogisticRegression(max_iter=1000, random_state=0)
     lr.fit(Xtrn_m, Ytrn)
     print(f'Classification accuracy on training set: {lr.score(Xtrn_m, Ytrn):.4f}')
-    print(f'Classification accuracy on test set: {lr.score(Xtst_m, Ytst):.4f}')
+    print(f'Classification accuracy on testing set: {lr.score(Xtst_m, Ytst):.4f}')
 
+    # Q2.5 b)
     print(Ytst)
     print(lr.predict(Xtst_m))
 
@@ -139,58 +153,63 @@ def iaml212cw2_q2_5():
     for i in range(len(Ytst)):
         if (Ytst[i]!=predicty[i]):
             nomatchidx.append(Ytst[i])
-    np.unique(nomatchidx, return_counts=True)
 
     u, count = np.unique(nomatchidx, return_counts=True)
     countsort = np.argsort(-count)
     u = u[countsort]
-    print(count[countsort][0:5])
     alphabet = []
     for i in u[0:5]:
         alphabet.append(chr(ord('@')+i+1))
+    print(count[countsort][0:5])
     print(u[0:5])
     print(alphabet)
-
-
-    #grid searching key hyperparametres for logistic regression
-
-    # define models and parameters
-    model = LogisticRegression(max_iter = 1000, random_state=0)
-    solvers = ['newton-cg', 'lbfgs', 'liblinear']
-    penalty = ['none', 'l1', 'l2', 'elasticnet']
-    cvalues = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100]
-    # define grid search
-    grid = dict(solver=solvers,penalty=penalty,C=cvalues)
-    # cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=0)
-    gridsearch = GridSearchCV(estimator=model, param_grid=grid, n_jobs=-1, scoring='accuracy')
-    gridresult = gridsearch.fit(Xtrn_m, Ytrn)
-    # summarize results
-    print(f"Best Accuracy: {gridresult.best_score_} using {gridresult.best_params_}")
-    means = gridresult.cv_results_['mean_test_score']
-    stds = gridresult.cv_results_['std_test_score']
-    params = gridresult.cv_results_['params']
-    for mean, stdev, param in zip(means, stds, params):
-        print(f"{mean} ({stdev}) with: {param}" % (mean, stdev, param))
 # iaml212cw2_q2_5()   # comment this out when you run the function
+
+
 
 # Q2.6
 def iaml212cw2_q2_6():
-    lr = LogisticRegression(max_iter=10000, random_state=0)
+    # Q2.6 c)
+    # #grid searching key hyperparametres for logistic regression
+    #
+    # # define models and parameters
+    # model = LogisticRegression(max_iter = 1000, random_state=0)
+    # solvers = ['newton-cg', 'lbfgs', 'liblinear']
+    # penalty = ['none', 'l1', 'l2', 'elasticnet']
+    # cvalues = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100]
+    # # define grid search
+    # grid = dict(solver=solvers,penalty=penalty,C=cvalues)
+    # # cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=0)
+    # gridsearch = GridSearchCV(estimator=model, param_grid=grid, n_jobs=-1, scoring='accuracy')
+    # gridresult = gridsearch.fit(Xtrn_m, Ytrn)
+    # # summarize results
+    # print(f"Best Accuracy: {gridresult.best_score_} using {gridresult.best_params_}")
+    # means = gridresult.cv_results_['mean_test_score']
+    # stds = gridresult.cv_results_['std_test_score']
+    # params = gridresult.cv_results_['params']
+    # for mean, stdev, param in zip(means, stds, params):
+    #     print(f"{mean} ({stdev}) with: {param}" % (mean, stdev, param))
+
+    #new classification accuracy on testing set
+    lr = LogisticRegression(max_iter=1000, C=0.1, penalty='l2', solver='newton-cg', random_state=0)
     lr.fit(Xtrn_m, Ytrn)
-    print(f'Classification accuracy on training set: {lr.score(Xtrn_m, Ytrn):.3f}')
-    print(f'Classification accuracy on testing set: {lr.score(Xtst_m, Ytst):.3f}')
-# iaml212cw2_q2_6()   # comment this out when you run the function
+    # print(f'Classification accuracy on training set: {lr.score(Xtrn_m, Ytrn):.4f}')
+    print(f'Classification accuracy on testing set: {lr.score(Xtst_m, Ytst):.4f}')
+iaml212cw2_q2_6()   # comment this out when you run the function
 
 # Q2.7
 def iaml212cw2_q2_7():
+    # Q2.7 a)
     covMatrix = np.cov(Xtrn_m[Ytrn==0], ddof=1)
     print(np.mean(covMatrix))
     print(np.max(covMatrix), np.min(covMatrix))
 
+    # Q2.7 b)
     di = np.diag(covMatrix)
     print(np.mean(di))
     print(np.max(di), np.min(di))
 
+    # Q2.7 c)
     plt.hist(di, bins=15, label="diagonal values")
     plt.title("Histogram of the diagonal values")
     plt.xlabel("Covariances")
@@ -200,30 +219,30 @@ def iaml212cw2_q2_7():
     plt.savefig("results/2_7.png")
     plt.show()
 
+    # Q2.7 d)
     meanvec = np.mean(Xtrn_m[Ytrn==0], axis=0)
-
     # rv = scipy.stats.multivariate_normal(meanvec, covMatrix)
-    # dist = rv.pdf(Xtrn_m[Ytrn==0])
+    # likelihood = rv.pdf(Xtrn_m[Ytrn==0])
 # iaml212cw2_q2_7()   # comment this out when you run the function
 
 # Q2.8
 def iaml212cw2_q2_8():
+    # Q2.8 a)
     classAtrn = Xtrn_m[Ytrn==0]
     classAtst = Xtst_m[0,:]
 
     gmm = GaussianMixture(n_components=1, covariance_type='full').fit(classAtrn)
     print(f"The log likelihood is: {gmm.score(classAtst.reshape(1,784))}")
 
-    log_likelihoods_ = []
+    # Q2.8 b)
     accuracies = []
     for i in range(26):
         gmm = GaussianMixture(n_components=1, covariance_type='full').fit(Xtrn_m[Ytrn==i])
         ypred = gmm.predict(Xtst_m)
-
         accuracies.append(accuracy_score(Ytst, ypred))
     print(accuracies)
 
-iaml212cw2_q2_8()   # comment this out when you run the function
+# iaml212cw2_q2_8()   # comment this out when you run the function
 
 # Q2.9
 # def iaml212cw2_q2_9():
