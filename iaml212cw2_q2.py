@@ -19,7 +19,7 @@ import scipy
 from scipy.stats import itemfreq
 import matplotlib.pyplot as plt
 
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.cluster import KMeans
 from sklearn.linear_model import LogisticRegression
@@ -119,7 +119,9 @@ def iaml212cw2_q2_3():
 
 # Q2.4
 # def iaml212cw2_q2_4():
-#
+
+#       desribed in Assignment_2.pdf
+
 # iaml212cw2_q2_4()   # comment this out when you run the function
 
 # Q2.5
@@ -202,8 +204,6 @@ def iaml212cw2_q2_7():
 
     # rv = scipy.stats.multivariate_normal(meanvec, covMatrix)
     # dist = rv.pdf(Xtrn_m[Ytrn==0])
-
-
 # iaml212cw2_q2_7()   # comment this out when you run the function
 
 # Q2.8
@@ -222,10 +222,12 @@ def iaml212cw2_q2_8():
 
         accuracies.append(accuracy_score(Ytst, ypred))
     print(accuracies)
-    #     log_likelihoods_.extend([[gmm_n.score(Xtrn_m[Ytrn==i]), gmm_n.score(Xtst_m[Ytst==i])]])
+
 iaml212cw2_q2_8()   # comment this out when you run the function
 
 # Q2.9
 # def iaml212cw2_q2_9():
-#
+
+#       desribed in Assignment_2.pdf
+
 # iaml212cw2_q2_9()   # comment this out when you run the function
