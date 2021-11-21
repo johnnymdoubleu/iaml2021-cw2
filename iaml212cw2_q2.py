@@ -195,12 +195,12 @@ def iaml212cw2_q2_6():
     lr.fit(Xtrn_m, Ytrn)
     print(f'Classification accuracy on training set: {lr.score(Xtrn_m, Ytrn):.4f}')
     print(f'Classification accuracy on testing set: {lr.score(Xtst_m, Ytst):.4f}')
-iaml212cw2_q2_6()   # comment this out when you run the function
+# iaml212cw2_q2_6()   # comment this out when you run the function
 
 # Q2.7
 def iaml212cw2_q2_7():
     # Q2.7 a)
-    covMatrix = np.cov(Xtrn_m[Ytrn==0], ddof=1)
+    covMatrix = np.cov(Xtrn_m[Ytrn==0], rowvar=False, ddof=1)
     print(np.mean(covMatrix))
     print(np.max(covMatrix), np.min(covMatrix))
 
