@@ -61,7 +61,7 @@ def iaml212cw2_q2_1():
     plt.title(f"Class {Ytrn[1]}")
     plt.savefig("results/2_1_2.png")
     plt.show()
-# iaml212cw2_q2_1()
+iaml212cw2_q2_1()
 
 # Q2.2
 def iaml212cw2_q2_2():
@@ -75,7 +75,7 @@ def iaml212cw2_q2_2():
     np.mean(Xtst, axis=0)
     np.mean(Xtrn, axis=0)
 
-# iaml212cw2_q2_2()   # comment this out when you run the function
+iaml212cw2_q2_2()   # comment this out when you run the function
 
 # Q2.3
 def iaml212cw2_q2_3():
@@ -127,7 +127,7 @@ def iaml212cw2_q2_3():
     fig.suptitle('Images of Cluster Centres for K=5')
     plt.savefig("results/2_3_2.png")
     plt.show()
-# iaml212cw2_q2_3()   # comment this out when you run the function
+iaml212cw2_q2_3()   # comment this out when you run the function
 
 # Q2.4
 # def iaml212cw2_q2_4():
@@ -163,7 +163,7 @@ def iaml212cw2_q2_5():
     print(count[countsort][0:5])
     print(u[0:5])
     print(alphabet)
-# iaml212cw2_q2_5()   # comment this out when you run the function
+iaml212cw2_q2_5()   # comment this out when you run the function
 
 
 
@@ -223,7 +223,7 @@ def iaml212cw2_q2_7():
     meanvec = np.mean(Xtrn_m[Ytrn==0], axis=0)
     # rv = scipy.stats.multivariate_normal(meanvec, covMatrix)
     # likelihood = rv.pdf(Xtrn_m[Ytrn==0])
-# iaml212cw2_q2_7()   # comment this out when you run the function
+iaml212cw2_q2_7()   # comment this out when you run the function
 
 # Q2.8
 def iaml212cw2_q2_8():
@@ -242,7 +242,7 @@ def iaml212cw2_q2_8():
         accuracies.append(accuracy_score(Ytst, ypred))
     print(accuracies)
 
-# iaml212cw2_q2_8()   # comment this out when you run the function
+iaml212cw2_q2_8()   # comment this out when you run the function
 
 # Q2.9
 # def iaml212cw2_q2_9():

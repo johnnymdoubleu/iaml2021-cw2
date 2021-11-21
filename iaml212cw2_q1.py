@@ -66,13 +66,13 @@ def iaml212cw2_q1_1():
     fig.supylabel("Count")
     plt.savefig("results/1_1.png")
     plt.show()
-# iaml212cw2_q1_1()
+iaml212cw2_q1_1()
 
 # Q1.2
 def iaml212cw2_q1_2():
     for i in range(9):
         print(np.corrcoef(Xtrn[:,i], Ytrn)[0][1])
-# iaml212cw2_q1_2()   # comment this out when you run the function
+iaml212cw2_q1_2()   # comment this out when you run the function
 
 # Q1.3
 # def iaml212cw2_q1_3():
@@ -120,7 +120,7 @@ def iaml212cw2_q1_4():
     plt.savefig("results/1_4_2.png")
     plt.show()
 
-# iaml212cw2_q1_4()   # comment this out when you run the function
+iaml212cw2_q1_4()   # comment this out when you run the function
 
 # # Q1.5
 def iaml212cw2_q1_5():
@@ -175,7 +175,7 @@ def iaml212cw2_q1_5():
     for i in range(9):
         print(np.corrcoef(Xtrn[:,i], newx[:,0])[0][1], np.corrcoef(Xtrn[:,i], newx[:,1])[0][1])
 
-# iaml212cw2_q1_5()   # comment this out when you run the function
+iaml212cw2_q1_5()   # comment this out when you run the function
 
 
 
@@ -235,7 +235,7 @@ def iaml212cw2_q1_6():
     for i in range(9):
         print(np.corrcoef(Xtrn_s[:,i], newx_s[:,0])[0][1], np.corrcoef(Xtrn_s[:,i], newx_s[:,1])[0][1])
 
-# iaml212cw2_q1_6()   # comment this out when you run the function
+iaml212cw2_q1_6()   # comment this out when you run the function
 
 # Q1.7
 # def iaml212cw2_q1_7():
@@ -290,7 +290,7 @@ def iaml212cw2_q1_8():
     cm = confusion_matrix(Ytst, modelpre)
     print(f"The classification accuracy is {model.score(Xtst_s, Ytst)}")
     print(f"number of instances correctly classified : {cm[0,0]+cm[1,1]}")
-# iaml212cw2_q1_8()   # comment this out when you run the function
+iaml212cw2_q1_8()   # comment this out when you run the function
 #
 # Q1.9
 def iaml212cw2_q1_9():
@@ -330,7 +330,7 @@ def iaml212cw2_q1_9():
     plt.legend()
     plt.savefig("results/1_9.png")
     plt.show()
-# iaml212cw2_q1_9()   # comment this out when you run the function
+iaml212cw2_q1_9()   # comment this out when you run the function
 #
 # Q1.10
 def iaml212cw2_q1_10():
