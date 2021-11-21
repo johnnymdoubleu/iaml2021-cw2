@@ -170,30 +170,30 @@ iaml212cw2_q2_5()   # comment this out when you run the function
 # Q2.6
 def iaml212cw2_q2_6():
     # Q2.6 c)
-    # #grid searching key hyperparametres for logistic regression
-    #
-    # # define models and parameters
-    # model = LogisticRegression(max_iter = 1000, random_state=0)
-    # solvers = ['newton-cg', 'lbfgs', 'liblinear']
-    # penalty = ['none', 'l1', 'l2', 'elasticnet']
-    # cvalues = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100]
-    # # define grid search
-    # grid = dict(solver=solvers,penalty=penalty,C=cvalues)
-    # # cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=0)
-    # gridsearch = GridSearchCV(estimator=model, param_grid=grid, n_jobs=-1, scoring='accuracy')
-    # gridresult = gridsearch.fit(Xtrn_m, Ytrn)
-    # # summarize results
-    # print(f"Best Accuracy: {gridresult.best_score_} using {gridresult.best_params_}")
-    # means = gridresult.cv_results_['mean_test_score']
-    # stds = gridresult.cv_results_['std_test_score']
-    # params = gridresult.cv_results_['params']
-    # for mean, stdev, param in zip(means, stds, params):
-    #     print(f"{mean} ({stdev}) with: {param}" % (mean, stdev, param))
+
+    # grid searching key hyperparametres for logistic regression
+    # define models and parameters
+    model = LogisticRegression(max_iter = 1000, random_state=0)
+    solvers = ['newton-cg', 'lbfgs', 'liblinear']
+    penalty = ['none', 'l1', 'l2', 'elasticnet']
+    cvalues = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100]
+    # define grid search
+    grid = dict(solver=solvers,penalty=penalty,C=cvalues)
+    # cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=0)
+    gridsearch = GridSearchCV(estimator=model, param_grid=grid, n_jobs=-1, scoring='accuracy')
+    gridresult = gridsearch.fit(Xtrn_m, Ytrn)
+    # summarize results
+    print(f"Best Accuracy: {gridresult.best_score_} using {gridresult.best_params_}")
+    means = gridresult.cv_results_['mean_test_score']
+    stds = gridresult.cv_results_['std_test_score']
+    params = gridresult.cv_results_['params']
+    for mean, stdev, param in zip(means, stds, params):
+        print(f"{mean} ({stdev}) with: {param}" % (mean, stdev, param))
 
     #new classification accuracy on testing set
     lr = LogisticRegression(max_iter=1000, C=0.1, penalty='l2', solver='newton-cg', random_state=0)
     lr.fit(Xtrn_m, Ytrn)
-    # print(f'Classification accuracy on training set: {lr.score(Xtrn_m, Ytrn):.4f}')
+    print(f'Classification accuracy on training set: {lr.score(Xtrn_m, Ytrn):.4f}')
     print(f'Classification accuracy on testing set: {lr.score(Xtst_m, Ytst):.4f}')
 iaml212cw2_q2_6()   # comment this out when you run the function
 
@@ -212,7 +212,7 @@ def iaml212cw2_q2_7():
     # Q2.7 c)
     plt.hist(di, bins=15, label="diagonal values")
     plt.title("Histogram of the diagonal values")
-    plt.xlabel("Covariances")
+    plt.xlabel("Covariance values")
     plt.ylabel("Count")
     plt.grid()
     plt.legend()
@@ -220,9 +220,10 @@ def iaml212cw2_q2_7():
     plt.show()
 
     # Q2.7 d)
-    meanvec = np.mean(Xtrn_m[Ytrn==0], axis=0)
-    # rv = scipy.stats.multivariate_normal(meanvec, covMatrix)
-    # likelihood = rv.pdf(Xtrn_m[Ytrn==0])
+    meanvec = np.mean(Xtrn_m[Ytrn==0].T, axis=1)
+    print(covMatrix)
+    likelihood = scipy.stats.multivariate_normal.pdf(Xtst_m[Ytst==0][0], meanvec, covMatrix)
+    # likelihood = rv.pdf(Xtrn_m[Ytrn==0][0])
 iaml212cw2_q2_7()   # comment this out when you run the function
 
 # Q2.8
@@ -235,13 +236,19 @@ def iaml212cw2_q2_8():
     print(f"The log likelihood is: {gmm.score(classAtst.reshape(1,784))}")
 
     # Q2.8 b)
-    accuracies = []
+    trainaccuracies = []
+    testaccuracies = []
     for i in range(26):
         gmm = GaussianMixture(n_components=1, covariance_type='full').fit(Xtrn_m[Ytrn==i])
-        ypred = gmm.predict(Xtst_m)
-        accuracies.append(accuracy_score(Ytst, ypred))
-    print(accuracies)
+        ypred = gmm.predict(Xtrn_m)
+        print(np.sum(np.diag(confusion_matrix(Ytrn, ypred))))
+        trainaccuracies.append(accuracy_score(Ytrn, ypred))
 
+        ypred = gmm.predict(Xtst_m)
+        print(np.sum(np.diag(confusion_matrix(Ytst, ypred))))
+        testaccuracies.append(accuracy_score(Ytst, ypred))
+    print(trainaccuracies)
+    print(testaccuracies)
 iaml212cw2_q2_8()   # comment this out when you run the function
 
 # Q2.9
